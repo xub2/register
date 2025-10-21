@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>수강 신청 시스템 - 시작</title>
+    <!-- Bootstrap CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* 커스텀 CSS: 중앙 정렬 및 배경 */
+        body {
+            background-color: #f8f9fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+        }
+        .container {
+            max-width: 600px;
+            padding: 30px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        .warning-box {
+            background-color: #fff3cd;
+            border: 1px solid #ffeeba;
+            color: #856404;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            text-align: left;
+        }
+        .logo-text {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #0d6efd; /* Bootstrap Primary color */
+            margin-bottom: 10px;
+        }
+        /* 💡 추가된 스타일: 비활성화 버튼 시각적 효과 강화 */
+        .disabled-button {
+            background-color: #adb5bd !important; /* 회색 배경 강제 */
+            border-color: #adb5bd !important;
+            cursor: not-allowed !important; /* 마우스 커서 변경 */
+            opacity: 0.7; /* 약간 흐릿하게 */
+            pointer-events: none; /* 클릭 이벤트 완벽 차단 */
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <!-- 1. 학교 로고/이름 -->
+    <div class="logo-text mb-5">
+        전봇대학교 수강 신청 시스템
+    </div>
+
+    <!-- 2. 수강 신청 유의사항 및 설명 -->
+    <h4 class="mb-3 text-start text-primary">수강 신청 유의사항 및 설명</h4>
+    <div class="warning-box">
+        <p class="fw-bold">⚠️ 유의사항을 반드시 읽어주세요.</p>
+        <ul class="list-unstyled mb-0">
+            <li><i class="bi bi-check-circle-fill text-success"></i> - 본 수강 신청은 서버 시간을 기준으로 동작하며, <span class="fw-bold">신청 시간 외에는 신청이 불가능합니다.</span></li>
+            <li></li>
+            <li><i class="bi bi-clock-fill text-info"></i> - 수강 시간 이외 수강 불가 항목에 대한 책임은 수강생 본인에게 있습니다.</li>
+            <li><i class="bi bi-credit-card-fill text-danger"></i> - 최대 학점 초과 시 수강 신청이 불가능합니다.</li>
+            <li><i class="bi bi-lock-fill text-dark"></i> - <span class="fw-bold">여러 브라우저를 통한 로그인 시도시 수강신청이 원할하게 이루어지지 않을 수 있습니다.</span></li>
+        </ul>
+    </div>
+
+    <!-- 3. 동의 체크박스 영역 -->
+    <div class="form-check text-start mb-4">
+        <input class="form-check-input" type="checkbox" id="agreementCheckbox">
+        <label class="form-check-label" for="agreementCheckbox">
+            본 학생은 수강신청 유의사항을 모두 읽고 내용에 동의합니다.
+        </label>
+    </div>
+
+    <!-- 4. 수강 신청 시작 버튼 (로그인 페이지로 이동) -->
+    <!-- 초기 상태는 disabled이며, JS로 제어됩니다. -->
+    <a th:href="@{/login}" id="startButton"
+       class="btn btn-primary btn-lg w-100 py-3 mt-4 shadow disabled-button" disabled>
+        로그인 페이지로 이동
+    </a>
+
+</div>
+
+<!-- Bootstrap JS CDN -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Custom JavaScript for button control -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const checkbox = document.getElementById('agreementCheckbox');
+        const startButton = document.getElementById('startButton');
+        const disabledClass = 'disabled-button'; // 추가된 클래스 이름
+
+        // 체크박스 상태 변경 이벤트 리스너
+        checkbox.addEventListener('change', function() {
+            if (this.checked) {
+                // 체크됨: 버튼 활성화 및 회색 스타일 제거
+                startButton.disabled = false;
+                startButton.classList.remove(disabledClass);
+            } else {
+                // 체크 해제: 버튼 비활성화 및 회색 스타일 추가
+                startButton.disabled = true;
+                startButton.classList.add(disabledClass);
+            }
+        });
+
+        // 페이지 로드 시 초기 상태: 버튼은 이미 HTML에서 disabled와 disabled-button 클래스를 가짐
+    });
+</script>
+</body>
+</html>

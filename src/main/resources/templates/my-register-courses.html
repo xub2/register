@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>나의 수강 신청 내역</title>
+    <!-- Bootstrap CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .info-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #ffffff;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .info-header {
+            border-bottom: 2px solid #0d6efd;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+        .enrollment-list-header {
+            background-color: #343a40; /* Darker header for contrast */
+            color: white;
+        }
+        .logout-btn-container {
+            margin-top: 20px;
+            text-align: right;
+        }
+        .left-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container-fluid mt-4">
+    <div class="row">
+
+        <!-- 1. 좌측 영역 (1/4): 이전 버튼 및 학생 정보 카드 -->
+        <div class="col-lg-3 col-md-4 mb-4">
+            <div class="left-panel">
+
+                <!-- 좌상단: 이전으로 버튼 -->
+                <a th:href="@{/courses}" class="btn btn-outline-secondary btn-lg w-100 shadow">
+                    ← 수강 신청 메인으로 돌아가기
+                </a>
+
+                <!-- 좌하단: 로그인 학생 정보 (courses.html과 동일) -->
+                <div class="info-card flex-grow-1">
+                    <h5 class="info-header text-primary">로그인 학생 정보</h5>
+                    <dl class="row mb-0 small">
+                        <dt class="col-5">학번</dt>
+                        <dd class="col-7 fw-bold" th:text="${studentInfo.userNumber}">202500036</dd>
+
+                        <dt class="col-5">이름</dt>
+                        <dd class="col-7" th:text="${studentInfo.username}">홍길동</dd>
+
+                        <dt class="col-5">전공</dt>
+                        <dd class="col-7" th:text="${studentInfo.majorName}">컴퓨터공학과</dd>
+
+                        <dt class="col-5">최대 학점</dt>
+                        <dd class="col-7" th:text="${studentInfo.maxCredit} + ' 학점'">18 학점</dd>
+
+                        <dt class="col-5">현재 신청 학점</dt>
+                        <dd class="col-7 text-danger fw-bold" th:text="${studentInfo.currentCredit} + ' 학점'">3 학점</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. 우측 영역 (3/4): 나의 수강 목록 리스트 -->
+        <div class="col-lg-9 col-md-8">
+
+            <h4 class="mb-3">나의 수강 신청 내역 (총 <span th:text="${enrollmentList.size()}">5</span>개)</h4>
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="enrollment-list-header">
+                    <tr>
+                        <th>신청 번호</th>
+                        <th>과목명</th>
+                        <th>교수</th>
+                        <th>학점</th>
+                        <th>신청 일시</th>
+                        <th>상태</th>
+                        <th>취소</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!-- 💡 서버에서 받은 enrollmentList를 Thymeleaf로 반복 처리 -->
+                    <tr th:each="enrollment : ${enrollmentList}">
+                        <td th:text="${enrollment.registerId}">1234</td>
+                        <td th:text="${enrollment.courseName}">이 수업은 재밌을꼬야</td>
+                        <td th:text="${enrollment.professorName}">지드래곤</td>
+                        <td th:text="${enrollment.courseCredit}">3</td>
+                        <td th:text="${#temporals.format(enrollment.registerDate, 'yyyy-MM-dd HH:mm')}">2025-03-01 09:00</td>
+
+                        <!-- 신청 상태 (COMPLETE, CANCEL) -->
+                        <td th:switch="${enrollment.status}">
+                            <span th:case="'COMPLETE'" class="badge bg-primary">신청 완료</span>
+                            <span th:case="'CANCEL'" class="badge bg-secondary">취소됨</span>
+                            <span th:case="*" class="badge bg-warning">상태 미확인</span>
+                        </td>
+
+                        <!-- 취소 버튼 (AJAX 요청) -->
+                        <td>
+                            <button type="button"
+                                    th:data-register-id="${enrollment.registerId}"
+                                    th:disabled="${enrollment.status != 'COMPLETE'}"
+                                    th:classappend="${enrollment.status != 'COMPLETE'} ? 'btn-light' : 'btn-danger'"
+                                    class="btn btn-sm cancel-btn">
+                                취소
+                            </button>
+                        </td>
+                    </tr>
+
+                    <!-- 💡 신청 내역이 없을 때 -->
+                    <tr th:if="${#lists.isEmpty(enrollmentList)}">
+                        <td colspan="7" class="text-center text-muted">수강 신청 내역이 없습니다.</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- 로그아웃 버튼 (좌/우측 그리드와 독립된 위치) -->
+    <div class="logout-btn-container">
+        <form th:action="@{/logout}" method="POST" style="display:inline;">
+            <button type="submit" class="btn btn-outline-danger btn-sm">
+                로그아웃
+            </button>
+        </form>
+    </div>
+
+</div>
+
+<!-- Bootstrap JS CDN -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- 💡 Custom JavaScript: AJAX 수강 취소 로직 구현 영역 -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const cancelButtons = document.querySelectorAll('.cancel-btn');
+
+        cancelButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const registerId = this.dataset.registerId;
+
+                if (!confirm(`신청 번호 ${registerId}의 수강 신청을 취소하시겠습니까?`)) {
+                    return; // 사용자가 취소를 원하지 않으면 종료
+                }
+
+                this.disabled = true;
+                this.textContent = '취소 중...';
+
+                // 1. 서버의 수강 취소 API (POST /api/cancel)로 AJAX 요청
+                fetch('/api/cancel', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        // TODO: CSRF 토큰 처리를 해야 합니다.
+                    },
+                    body: JSON.stringify({ registerId: registerId })
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            return response.json();
+                        } else {
+                            // 서버에서 던진 비즈니스 예외(400) 등을 처리
+                            return response.json().then(error => {
+                                throw new Error(error.message || '수강 취소 실패');
+                            }).catch(() => {
+                                throw new Error('서버와의 통신 중 알 수 없는 오류가 발생했습니다.');
+                            });
+                        }
+                    })
+                    .then(data => {
+                        // 2. 성공 시: 페이지 리로드 또는 상태 업데이트
+                        alert('수강 신청이 성공적으로 취소되었습니다.');
+                        // 취소 후 상태를 즉시 반영하기 위해 페이지를 새로고침합니다.
+                        window.location.reload();
+                    })
+                    .catch(error => {
+                        // 3. 실패 시: 피드백 및 버튼 복구
+                        alert('취소 실패: ' + error.message);
+                        this.disabled = false;
+                        this.textContent = '취소';
+                    });
+            });
+        });
+    });
+</script>
+
+</body>
+</html>

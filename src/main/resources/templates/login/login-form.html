@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로그인 - 수강 신청 시스템</title>
+    <!-- Bootstrap CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* 커스텀 CSS: 중앙 정렬 */
+        body {
+            background-color: #e9ecef;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .login-card {
+            max-width: 400px;
+            width: 100%;
+            padding: 40px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        .logo-text {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #0d6efd;
+            margin-bottom: 25px;
+        }
+        .field-error {
+            border-color: #dc3545;
+            color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+<div class="login-card">
+
+    <!-- 학교 로고/이름 -->
+    <div class="logo-text text-center">
+        전봇대학교 수강신청 로그인
+    </div>
+
+    <form th:action="@{/login}" th:object="${loginForm}" method="post">
+
+        <!-- 학번 입력 필드 -->
+        <div class="mb-3">
+            <label for="studentNumber" class="form-label fw-bold">학번</label>
+            <input type="text" id="studentNumber" th:field="*{studentNumber}"
+                   th:errorclass="field-error" class="form-control form-control-lg" placeholder="학번을 입력하세요" autofocus>
+            <div class="field-error" th:errors="*{studentNumber}">
+            </div>
+        </div>
+
+        <!-- 비밀번호 입력 필드 -->
+        <div class="mb-4">
+            <label for="password" class="form-label fw-bold">비밀번호</label>
+            <input type="password" id="password" th:field="*{password}"
+                   th:errorclass="field-error" class="form-control form-control-lg" placeholder="비밀번호를 입력하세요">
+            <div class="field-error" th:errors="*{password}">
+            </div>
+        </div>
+
+        <div th:if="${#fields.hasGlobalErrors()}">
+            <p class="field-error" th:each="err : ${#fields.globalErrors()}" th:text="${err}">글로벌 오류 메시지</p>
+        </div>
+
+        <!-- 3. 로그인 버튼 -->
+        <button type="submit" class="btn btn-primary btn-lg w-100 shadow-sm">
+            로그인
+        </button>
+
+        <!-- 4. CSRF 토큰 필드는 Spring Security가 자동으로 추가합니다. -->
+    </form>
+
+    <p class="text-center text-muted mt-4">
+        <a th:href="@{/}" class="text-decoration-none">← 유의사항 페이지로 돌아가기</a>
+    </p>
+
+</div>
+
+<!-- Bootstrap JS CDN -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
