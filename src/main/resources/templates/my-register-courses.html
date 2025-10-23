@@ -57,20 +57,29 @@
                     <h5 class="info-header text-primary">로그인 학생 정보</h5>
                     <dl class="row mb-0 small">
                         <dt class="col-5">학번</dt>
-                        <dd class="col-7 fw-bold" th:text="${studentInfo.userNumber}">202500036</dd>
+                        <dd class="col-7 fw-bold" th:text="${studentInfo.studentNumber}">202500036</dd>
 
                         <dt class="col-5">이름</dt>
-                        <dd class="col-7" th:text="${studentInfo.username}">홍길동</dd>
+                        <dd class="col-7" th:text="${studentInfo.studentName}">홍길동</dd>
 
                         <dt class="col-5">전공</dt>
-                        <dd class="col-7" th:text="${studentInfo.majorName}">컴퓨터공학과</dd>
+                        <dd class="col-7" th:text="${studentInfo.major.getMajorName()}">컴퓨터공학과</dd>
 
                         <dt class="col-5">최대 학점</dt>
-                        <dd class="col-7" th:text="${studentInfo.maxCredit} + ' 학점'">18 학점</dd>
+                        <dd class="col-7" th:text="${studentInfo.getMaxCredit()} + ' 학점'">18 학점</dd>
 
                         <dt class="col-5">현재 신청 학점</dt>
-                        <dd class="col-7 text-danger fw-bold" th:text="${studentInfo.currentCredit} + ' 학점'">3 학점</dd>
+                        <dd class="col-7 text-danger fw-bold" th:text="${studentInfo.getCurrentCredit()} + ' 학점'">3 학점</dd>
                     </dl>
+                </div>
+
+                <!-- 로그아웃 버튼 (좌/우측 그리드와 독립된 위치) -->
+                <div class="logout-btn-container">
+                    <form th:action="@{/logout}" method="POST" style="display:inline;">
+                        <button type="submit" class="btn btn-outline-danger btn-sm">
+                            로그아웃
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -78,7 +87,7 @@
         <!-- 2. 우측 영역 (3/4): 나의 수강 목록 리스트 -->
         <div class="col-lg-9 col-md-8">
 
-            <h4 class="mb-3">나의 수강 신청 내역 (총 <span th:text="${enrollmentList.size()}">5</span>개)</h4>
+            <h4 class="mb-3">나의 수강 신청 내역 (총 <span th:text="${studentRegisters.size()}">5</span>개)</h4>
 
             <div class="table-responsive">
                 <table class="table table-hover align-middle">
@@ -94,35 +103,34 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <!-- 💡 서버에서 받은 enrollmentList를 Thymeleaf로 반복 처리 -->
-                    <tr th:each="enrollment : ${enrollmentList}">
-                        <td th:text="${enrollment.registerId}">1234</td>
-                        <td th:text="${enrollment.courseName}">이 수업은 재밌을꼬야</td>
-                        <td th:text="${enrollment.professorName}">지드래곤</td>
-                        <td th:text="${enrollment.courseCredit}">3</td>
-                        <td th:text="${#temporals.format(enrollment.registerDate, 'yyyy-MM-dd HH:mm')}">2025-03-01 09:00</td>
+                    <!-- 💡 서버에서 받은 studentRegisters를 Thymeleaf로 반복 처리 -->
+                    <tr th:each="register : ${studentRegisters}">
+                        <td th:text="${register.id}">1234</td>
+                        <td th:text="${register.courseName}">이 수업은 재밌을꼬야</td>
+                        <td th:text="${register.professor.getProfessorName()}">지드래곤</td>
+                        <td th:text="${register.courseCredit}">3</td>
+                        <td th:text="${#temporals.format(register.registerDate, 'yyyy-MM-dd HH:mm')}">2025-03-01 09:00</td>
 
                         <!-- 신청 상태 (COMPLETE, CANCEL) -->
-                        <td th:switch="${enrollment.status}">
-                            <span th:case="'COMPLETE'" class="badge bg-primary">신청 완료</span>
+                        <td th:switch="${register.status.name()}"> <!-- 부모에 th:switch가 있음 -->
+                            <span th:case="'COMPLETE'" class="badge bg-success">신청 완료</span> <!-- 자식에 th:case -->
                             <span th:case="'CANCEL'" class="badge bg-secondary">취소됨</span>
-                            <span th:case="*" class="badge bg-warning">상태 미확인</span>
                         </td>
 
                         <!-- 취소 버튼 (AJAX 요청) -->
                         <td>
                             <button type="button"
-                                    th:data-register-id="${enrollment.registerId}"
-                                    th:disabled="${enrollment.status != 'COMPLETE'}"
-                                    th:classappend="${enrollment.status != 'COMPLETE'} ? 'btn-light' : 'btn-danger'"
-                                    class="btn btn-sm cancel-btn">
-                                취소
+                                    th:data-register-id="${register.id}"
+                                    th:disabled="${register.status.name() != 'COMPLETE'}"
+                                    th:classappend="${register.status.name() != 'COMPLETE'} ? 'btn-light' : 'btn-danger'"
+                                    class="btn cancel-btn"> <!-- (기본 btn-danger 삭제, 클래스명 변경 권장) -->
+                            취소
                             </button>
                         </td>
                     </tr>
 
                     <!-- 💡 신청 내역이 없을 때 -->
-                    <tr th:if="${#lists.isEmpty(enrollmentList)}">
+                    <tr th:if="${#lists.isEmpty(studentRegisters)}">
                         <td colspan="7" class="text-center text-muted">수강 신청 내역이 없습니다.</td>
                     </tr>
                     </tbody>
@@ -132,14 +140,7 @@
         </div>
     </div>
 
-    <!-- 로그아웃 버튼 (좌/우측 그리드와 독립된 위치) -->
-    <div class="logout-btn-container">
-        <form th:action="@{/logout}" method="POST" style="display:inline;">
-            <button type="submit" class="btn btn-outline-danger btn-sm">
-                로그아웃
-            </button>
-        </form>
-    </div>
+
 
 </div>
 

@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import register.register.domain.Student;
 import register.register.exception.StudentNotFoundException;
 import register.register.repository.StudentRepository;
+import register.register.web.dto.StudentInfoDto;
 
 @Service
 @Transactional(readOnly = true)
@@ -16,5 +17,10 @@ public class StudentService {
 
     public Student findByStudentNumber(String studentNumber) {
         return studentRepository.findByStudentNumber(studentNumber).orElseThrow(() -> new StudentNotFoundException("해당 학생을 찾을 수 없습니다 : " +  studentNumber ));
+    }
+
+    // 이 메서드는 JWT 토큰이 있는 상태에서만 접근 가능하기 때문에 .get() 써도 될 듯?
+    public StudentInfoDto getStudentInfo(String studentNumber) {
+        return studentRepository.findStudentInfoDto(studentNumber).get();
     }
 }

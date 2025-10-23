@@ -8,28 +8,26 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import register.register.service.RegisterService;
+import register.register.service.CourseService;
 import register.register.service.StudentService;
-import register.register.web.dto.RegisterDto;
-
-import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/my-register")
+@RequestMapping("/courses")
 @Slf4j
-public class MyRegisterController {
+public class CourseController {
 
+    private final CourseService courseService;
     private final StudentService studentService;
-    private final RegisterService registerService;
 
     @GetMapping
-    public String myRegisterList(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+    public String courses(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+
         String studentNumber = userDetails.getUsername();
 
         model.addAttribute("studentInfo", studentService.getStudentInfo(studentNumber));
-        model.addAttribute("studentRegisters", registerService.getStudentRegisters(studentNumber));
+        model.addAttribute("courses", courseService.findCourseList());
 
-        return "my-register-courses";
+        return "courses";
     }
 }

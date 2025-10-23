@@ -41,7 +41,7 @@
         <div class="col-lg-3 col-md-4 mb-4">
 
             <!-- 수강 신청 내역 바로가기 버튼 -->
-            <a th:href="@{/my-enrollments}" class="btn btn-warning btn-lg w-100 mb-3 shadow">
+            <a th:href="@{/my-register}" class="btn btn-warning btn-lg w-100 mb-3 shadow">
                 <i class="bi bi-list-task me-2"></i> 나의 신청 내역 바로가기
             </a>
 
@@ -50,13 +50,13 @@
                 <h5 class="info-header text-primary">로그인 학생 정보</h5>
                 <dl class="row mb-0 small">
                     <dt class="col-5">학번</dt>
-                    <dd class="col-7 fw-bold" th:text="${studentInfo.userNumber}">202500036</dd>
+                    <dd class="col-7 fw-bold" th:text="${studentInfo.studentNumber}">202500036</dd>
 
                     <dt class="col-5">이름</dt>
-                    <dd class="col-7" th:text="${studentInfo.username}">홍길동</dd>
+                    <dd class="col-7" th:text="${studentInfo.studentName}">홍길동</dd>
 
                     <dt class="col-5">전공</dt>
-                    <dd class="col-7" th:text="${studentInfo.majorName}">컴퓨터공학과</dd>
+                    <dd class="col-7" th:text="${studentInfo.major.getMajorName()}">컴퓨터공학과</dd>
 
                     <dt class="col-5">최대 학점</dt>
                     <dd class="col-7" th:text="${studentInfo.maxCredit} + ' 학점'">18 학점</dd>
@@ -66,12 +66,22 @@
                 </dl>
             </div>
 
+            <!-- 로그아웃 버튼 -->
+            <div class="logout-btn-container">
+                <form th:action="@{/logout}" method="POST" style="display:inline;">
+                    <button type="submit" class="btn btn-outline-danger btn-sm">
+                        로그아웃
+                    </button>
+                </form>
+            </div>
         </div>
+
+
 
         <!-- 2. 우측: 수강 가능 과목 리스트 -->
         <div class="col-lg-9 col-md-8">
 
-            <h4 class="mb-3">수강 가능 과목 리스트 (총 <span th:text="${courseList.size()}">20</span>개)</h4>
+            <h4 class="mb-3">수강 가능 과목 리스트 (총 <span th:text="${courses.size()}">20</span>개)</h4>
 
             <div class="table-responsive">
                 <table class="table table-hover align-middle">
@@ -89,38 +99,41 @@
                     </thead>
                     <tbody>
                     <!-- 💡 서버에서 받은 courseList를 Thymeleaf로 반복 처리 -->
-                    <tr th:each="course : ${courseList}">
-                        <td th:text="${course.courseId}">101</td>
+                    <tr th:each="course : ${courses}">
+                        <td th:text="${course.id}">101</td>
                         <td th:text="${course.courseName}">태양을 피하는 법</td>
-                        <td th:text="${course.professorName}">졸리다</td>
-                        <td th:text="${course.courseCredit}">3</td>
+                        <td th:text="${course.professor.getProfessorName()}">로드리 교수</td>
+                        <td th:text="${course.courseCredit}">3학점</td>
                         <td>
-                            <span th:text="${course.currentCapacity}">45</span> / <span th:text="${course.maxCapacity}">50</span>
+                            <span th:text="${course.currentStudentCapacity}">45</span> / <span th:text="${course.maxStudentCapacity}">50</span>
                         </td>
-                        <td th:text="${course.daytime}">월/수 10:00</td>
+                        <td th:text="${course.courseDayTime}">월/수 10:00</td>
 
                         <!-- 신청 상태 (시간 마감, 정원 초과 등) -->
-                        <td th:switch="${course.status}">
-                            <span th:case="'AVAILABLE'" class="badge bg-success">신청 가능</span>
-                            <span th:case="'CLOSED'" class="badge bg-danger">시간 마감</span>
-                            <span th:case="'FULL'" class="badge bg-secondary">정원 마감</span>
-                            <span th:case="*" class="badge bg-info">준비 중</span>
+                        <!-- 신청 상태 (정원 비교) -->
+                        <td>
+                            <!-- 1. if: 정원이 꽉 찼으면 "정원 마감" -->
+                            <span th:if="${course.currentStudentCapacity >= course.maxStudentCapacity}"
+                                  class="badge bg-danger">정원 마감</span>
+
+                            <!-- 2. unless: 1번 조건이 아니면(정원이 꽉 차지 않았으면) "신청 가능" -->
+                            <span th:if="${course.currentStudentCapacity < course.maxStudentCapacity}"
+                                  class="badge bg-success">신청 가능</span>
                         </td>
 
                         <!-- 신청 버튼 (AJAX 요청) -->
                         <td>
                             <button type="button"
-                                    th:data-course-id="${course.courseId}"
-                                    th:disabled="${course.status != 'AVAILABLE'}"
-                                    th:classappend="${course.status != 'AVAILABLE'} ? 'btn-secondary' : 'btn-primary'"
-                                    class="btn btn-primary enroll-btn">
-                                신청
+                                    th:data-course-id="${course.id}"
+                                    th:disabled="${course.currentStudentCapacity >= course.maxStudentCapacity}"
+                                    th:classappend="${course.currentStudentCapacity >= course.maxStudentCapacity} ? 'btn-secondary' : 'btn-primary'" class="btn enroll-btn"> <!-- (기본 btn-primary 삭제) -->
+                            신청
                             </button>
                         </td>
                     </tr>
 
                     <!-- 💡 강의 목록이 비어 있을 때 -->
-                    <tr th:if="${#lists.isEmpty(courseList)}">
+                    <tr th:if="${#lists.isEmpty(courses)}">
                         <td colspan="8" class="text-center text-muted">현재 수강 신청 가능한 과목이 없습니다.</td>
                     </tr>
                     </tbody>
@@ -140,14 +153,7 @@
         </div>
     </div>
 
-    <!-- 로그아웃 버튼 -->
-    <div class="logout-btn-container">
-        <form th:action="@{/logout}" method="POST" style="display:inline;">
-            <button type="submit" class="btn btn-outline-danger btn-sm">
-                로그아웃
-            </button>
-        </form>
-    </div>
+
 
 </div>
 
