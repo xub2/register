@@ -10,9 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import register.register.service.RegisterService;
 import register.register.service.StudentService;
-import register.register.web.dto.RegisterDto;
-
-import java.util.List;
 
 @Controller
 @RequiredArgsConstructor

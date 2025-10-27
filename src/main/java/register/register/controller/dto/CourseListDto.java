@@ -1,22 +1,21 @@
-package register.register.web.dto;
+package register.register.controller.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import register.register.domain.Professor;
-import register.register.domain.register.RegisterStatus;
-
-import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RegisterDto {
+public class CourseListDto {
 
     private Long id;
     private String courseName;
     private Professor professor;
     private Integer courseCredit;
-    private LocalDateTime registerDate;
-    private RegisterStatus status;
+    private Integer currentStudentCapacity;
+    private Integer maxStudentCapacity;
+    private String courseDayTime;
+
 }

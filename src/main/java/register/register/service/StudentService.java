@@ -4,9 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import register.register.domain.Student;
-import register.register.exception.StudentNotFoundException;
+import register.register.common.exception.StudentNotFoundException;
 import register.register.repository.StudentRepository;
-import register.register.web.dto.StudentInfoDto;
+import register.register.controller.dto.StudentInfoDto;
 
 @Service
 @Transactional(readOnly = true)

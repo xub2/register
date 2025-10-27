@@ -4,9 +4,9 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import register.register.exception.CourseCapacityFullException;
-import register.register.exception.RegisterClosedException;
-import register.register.exception.RegisterNotStartedException;
+import register.register.common.exception.CourseCapacityFullException;
+import register.register.common.exception.RegisterClosedException;
+import register.register.common.exception.RegisterNotStartedException;
 
 import java.time.LocalDateTime;
 

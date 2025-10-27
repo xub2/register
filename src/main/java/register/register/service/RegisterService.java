@@ -5,11 +5,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import register.register.domain.Course;
 import register.register.domain.Student;
-import register.register.domain.register.Register;
+import register.register.domain.Register;
 import register.register.repository.CourseRepository;
 import register.register.repository.RegisterRepository;
 import register.register.repository.StudentRepository;
-import register.register.web.dto.RegisterDto;
+import register.register.controller.dto.RegisterDto;
 
 import java.util.List;
 

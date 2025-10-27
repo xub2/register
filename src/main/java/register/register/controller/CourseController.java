@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import register.register.controller.dto.ApiResponseDto;
 import register.register.domain.Student;
-import register.register.exception.AlreadyCanceledException;
+import register.register.common.exception.AlreadyCanceledException;
 import register.register.service.CourseService;
 import register.register.service.RegisterService;
 import register.register.service.StudentService;

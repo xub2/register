@@ -9,8 +9,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 import register.register.domain.Student;
-import register.register.exception.LoginAuthenticationException;
-import register.register.web.dto.LoginDto;
+import register.register.common.exception.LoginAuthenticationException;
+import register.register.controller.dto.LoginDto;
 import register.register.service.LoginService;
 
 @Component

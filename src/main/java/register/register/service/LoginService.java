@@ -6,9 +6,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import register.register.domain.Student;
-import register.register.exception.LoginAuthenticationException;
+import register.register.common.exception.LoginAuthenticationException;
 import register.register.repository.StudentRepository;
-import register.register.web.dto.LoginDto;
+import register.register.controller.dto.LoginDto;
 
 @Slf4j
 @Service

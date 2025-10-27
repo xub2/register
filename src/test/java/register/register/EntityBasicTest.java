@@ -1,13 +1,12 @@
 package register.register;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import register.register.domain.Role;
 import register.register.domain.Student;
-import register.register.exception.StudentNotFoundException;
+import register.register.common.exception.StudentNotFoundException;
 import register.register.repository.StudentRepository;
 import register.register.service.StudentService;
 

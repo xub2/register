@@ -1,4 +1,4 @@
-package register.register.exception;
+package register.register.common.exception;
 
 public class LoginAuthenticationException extends RuntimeException {
     public LoginAuthenticationException() {

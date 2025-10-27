@@ -1,4 +1,4 @@
-package register.register.common.auth;
+package register.register.security.auth;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

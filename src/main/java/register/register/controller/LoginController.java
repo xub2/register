@@ -9,9 +9,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import register.register.common.auth.JWTTokenProvider;
+import register.register.security.auth.JWTTokenProvider;
 import register.register.domain.Student;
-import register.register.web.dto.LoginDto;
+import register.register.controller.dto.LoginDto;
 import register.register.service.LoginService;
 import register.register.common.validation.LoginValidator;
 

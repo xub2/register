@@ -1,4 +1,4 @@
-package register.register.web.dto;
+package register.register.controller.dto;
 
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;

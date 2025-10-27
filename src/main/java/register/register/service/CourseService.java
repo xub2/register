@@ -4,9 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import register.register.domain.Course;
-import register.register.domain.Student;
 import register.register.repository.CourseRepository;
-import register.register.web.dto.CourseListDto;
+import register.register.controller.dto.CourseListDto;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package register.register.domain.register;
+package register.register.domain;
 
 public enum RegisterStatus {
     COMPLETE, CANCEL

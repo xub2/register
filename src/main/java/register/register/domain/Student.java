@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import register.register.domain.register.Register;
 
 import java.util.ArrayList;
 import java.util.List;

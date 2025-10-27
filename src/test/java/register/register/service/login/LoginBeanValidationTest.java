@@ -5,7 +5,7 @@ import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 import org.junit.jupiter.api.Test;
-import register.register.web.dto.LoginDto;
+import register.register.controller.dto.LoginDto;
 
 import java.util.Set;
 

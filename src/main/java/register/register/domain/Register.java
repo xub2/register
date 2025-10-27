@@ -1,12 +1,10 @@
-package register.register.domain.register;
+package register.register.domain;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import register.register.domain.Course;
-import register.register.domain.Student;
-import register.register.exception.AlreadyCanceledException;
+import register.register.common.exception.AlreadyCanceledException;
 
 import java.time.LocalDateTime;
 
