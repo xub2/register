@@ -1,4 +1,4 @@
-package register.register.web.validation;
+package register.register.common.validation;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

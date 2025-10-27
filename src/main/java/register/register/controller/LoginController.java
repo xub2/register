@@ -1,7 +1,6 @@
 package register.register.controller;
 
 import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +13,7 @@ import register.register.common.auth.JWTTokenProvider;
 import register.register.domain.Student;
 import register.register.web.dto.LoginDto;
 import register.register.service.LoginService;
-import register.register.web.validation.LoginValidator;
+import register.register.common.validation.LoginValidator;
 
 
 @Controller
@@ -41,12 +40,9 @@ public class LoginController {
     @PostMapping
     public String login(@Validated @ModelAttribute("loginDto") LoginDto loginDto,
                         BindingResult bindingResult,
-                        @RequestParam(defaultValue = "/") String redirectUrl,
-                        HttpServletRequest request,
                         HttpServletResponse response) {
 
         // 필드 검증 로직 시작
-//        loginValidator.validate(form, bindingResult);
         if (bindingResult.hasErrors()) {
             log.warn("error = {}", bindingResult);
             return "login/login-form";
