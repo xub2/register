@@ -164,7 +164,7 @@
                 this.textContent = '취소 중...';
 
                 // 1. 서버의 수강 취소 API (POST /api/cancel)로 AJAX 요청
-                fetch('/api/cancel', {
+                fetch('/courses/cancel', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

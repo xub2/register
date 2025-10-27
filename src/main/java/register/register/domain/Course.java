@@ -84,16 +84,26 @@ public class Course {
         this.currentStudentCapacity++;
     }
 
-    /**
-     * 비즈니스 메서드 -> 수강 취소
-     */
 
-    public void cancelCourse() {
+    /**
+     * 수강인원 증가
+     */
+    public void increaseCapacity() {
+        this.currentStudentCapacity++;
+    }
+
+    /**
+     * 수강 인원 감소
+     */
+    public void decreaseCapacity() {
+        if (this.currentStudentCapacity == null) {
+            this.currentStudentCapacity = 0;
+        }
+
         if (this.currentStudentCapacity > 0) {
             this.currentStudentCapacity--;
         }
     }
-
 
 
 }

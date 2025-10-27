@@ -153,8 +153,6 @@
         </div>
     </div>
 
-
-
 </div>
 
 <!-- Bootstrap JS CDN -->
@@ -169,50 +167,67 @@
             button.addEventListener('click', function() {
                 const courseId = this.dataset.courseId; // 버튼의 data-course-id 속성 값
 
-                // 버튼을 눌렀을 때 비활성화하여 중복 클릭 방지 (UX 개선)
                 this.disabled = true;
                 this.textContent = '신청 중...';
 
-                // 1. 서버의 수강 신청 API (POST /api/enroll)로 AJAX 요청
-                fetch('/api/enroll', {
+                fetch('/courses/register', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        // CSRF 토큰 처리를 해야 하지만, Spring Security를 사용하지 않으므로 임시로 생략합니다.
-                        // 실제로는 헤더에 CSRF 토큰을 포함해야 합니다.
+                        'Accept': 'application/json'
                     },
+                    credentials: 'same-origin', // 쿠키 전송을 위해 필요
                     body: JSON.stringify({ courseId: courseId })
                 })
                     .then(response => {
-                        // 서버 응답 상태 코드에 따라 처리
-                        if (response.ok) {
-                            return response.json(); // 성공 시 JSON 응답 파싱
-                        } else {
-                            // 4xx, 5xx 에러 처리
-                            return response.json().then(error => {
-                                throw new Error(error.message || '수강 신청 실패');
-                            });
-                        }
+                        // [수정] 응답 본문 파싱을 .text()로 먼저 시도 (JSON이 아닐 수 있음)
+                        return response.text().then(text => {
+                            try {
+                                const data = JSON.parse(text); // JSON 파싱 시도
+                                if (!response.ok) {
+                                    throw new Error(data.message || `HTTP error! status: ${response.status}`);
+                                }
+                                return data; // JSON 객체 반환
+                            } catch (e) {
+                                // JSON 파싱 실패 시 (void 반환 또는 일반 텍스트 응답 등)
+                                if (!response.ok) {
+                                    console.error("Raw response text:", text);
+                                    throw new Error(text || `HTTP error! status: ${response.status}`);
+                                }
+                                return { message: '요청은 성공했지만 응답 형식이 예상과 다릅니다.' }; // 임시 성공 객체
+                            }
+                        });
                     })
                     .then(data => {
-                        // 2. 성공 시: 신청 결과 화면으로 리다이렉트
-                        alert('수강 신청에 성공했습니다! (Course ID: ' + courseId + ')');
-                        window.location.href = '/enrollment-result?status=success&courseId=' + courseId;
+                        alert(data.message || '수강 신청에 성공했습니다!'); // 서버 메시지 사용
+                        location.reload(); // 페이지 새로고침하여 결과 반영 (리다이렉션 대신)
+                        // window.location.href = '/enrollment-result?status=success&courseId=' + courseId; // 또는 특정 페이지로 이동
                     })
                     .catch(error => {
-                        // 3. 실패 시: 사용자에게 피드백 제공
-                        alert('수강 신청 실패: ' + error.message);
+                        let errorMessage = error.message; // 1. error 객체에서 message를 추출
 
-                        // 실패했으므로 버튼을 다시 활성화 (재시도 가능)
+                        try {
+                            // 2. error.message가 JSON 문자열인지 파싱 시도
+                            const errorData = JSON.parse(errorMessage);
+
+                            // 3. 파싱에 성공하고, 그 안에 'message' 속성이 있다면
+                            //    errorMessage를 내부 메시지 값으로 교체
+                            if (errorData && errorData.message) {
+                                errorMessage = errorData.message;
+                            }
+                        } catch (e) {
+                            // 4. JSON 파싱에 실패하면(원래 순수 텍스트 메시지였다면)
+                            //    그냥 원본 errorMessage를 그대로 사용
+                        }
+
+                        // 5. 최종적으로 처리된 errorMessage를 alert에 표시
+                        alert('수강 신청 실패: ' + errorMessage);
+
                         this.disabled = false;
                         this.textContent = '신청';
                     });
             });
         });
-
-        // 💡 JavaScript 시간 검증 (프런트엔드 단)
-        // 백엔드에서 받은 강의 시작/종료 시간을 이용해 버튼 활성/비활성 로직을 추가할 수 있습니다.
-        // 현재는 백엔드에서 받은 course.status를 이용해 버튼을 제어합니다.
     });
 </script>
 

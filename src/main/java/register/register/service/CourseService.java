@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import register.register.domain.Course;
+import register.register.domain.Student;
 import register.register.repository.CourseRepository;
 import register.register.web.dto.CourseListDto;
 
@@ -23,4 +24,5 @@ public class CourseService {
     public List<CourseListDto> findCourseList() {
         return courseRepository.findCourseList();
     }
+
 }
