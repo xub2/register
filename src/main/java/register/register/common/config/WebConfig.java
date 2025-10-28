@@ -2,9 +2,12 @@ package register.register.common.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import register.register.common.interceptor.RegisterTimeInterceptor;
+
+import java.util.List;
 
 @Configuration
 @RequiredArgsConstructor
@@ -28,5 +31,10 @@ public class WebConfig implements WebMvcConfigurer {
                         "/application-unavailable",
                         "/error"
                 );
+    }
+
+    @Override
+    public void extendHandlerExceptionResolvers(List<HandlerExceptionResolver> resolvers) {
+        WebMvcConfigurer.super.extendHandlerExceptionResolvers(resolvers);
     }
 }
