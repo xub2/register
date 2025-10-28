@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import register.register.domain.Professor;
+import register.register.domain.Register;
 import register.register.domain.RegisterStatus;
 
 import java.time.LocalDateTime;
@@ -19,4 +20,5 @@ public class RegisterDto {
     private Integer courseCredit;
     private LocalDateTime registerDate;
     private RegisterStatus status;
+
 }
