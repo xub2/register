@@ -34,8 +34,12 @@ public class JWTTokenFilter extends GenericFilter { // GenricFilter는 모든 �
 
     // JWT 서명/검증에 사용할 비밀 키 (HS512 알고리즘)
     private final SecretKey secretKey;
-    // 사용할 쿠키의 이름 (LoginController와 동일)
+    // 사용할 쿠키의 이름 (MVC 구조)
     private final String AUTH_COOKIE_NAME = "AUTH_TOKEN";
+
+    // API 에서 헤더의 토큰 검증
+    private final String AUTHORIZATION_HEADER = "Authorization";
+    private final String BEARER_PREFIX = "Bearer ";
 
     public JWTTokenFilter(@Value("${jwt.secret}") String secretKeyBase64) {
         // application.properties의 jwt.secret 값을 Base64 디코딩하여 byte 배열로 변환
@@ -68,7 +72,7 @@ public class JWTTokenFilter extends GenericFilter { // GenricFilter는 모든 �
         }
 
         // "/", "/login", "/logout" 등 정확히 일치해야 하는 경로는 공개 처리 (equals: 정확히 같은지)
-        List<String> exactMatchPaths = List.of("/", "/login", "/logout", "/favicon.ico", "/error"); // "/" 중복이지만 괜찮음
+        List<String> exactMatchPaths = List.of("/", "/login", "/logout", "/favicon.ico", "/error", "/api/auth/login"); // "/" 중복이지만 괜찮음
         if (!isPublicPath && exactMatchPaths.stream().anyMatch(path::equals)) {
             isPublicPath = true;
         }
@@ -83,15 +87,19 @@ public class JWTTokenFilter extends GenericFilter { // GenricFilter는 모든 �
         }
 
 
-        // 비공개 경로 처리 로직 시작
-        // 쿠키 목록에서 "AUTH_TOKEN" 쿠키를 찾아 토큰 문자열 추출
-        Optional<String> token = extractTokenFromCookie(httpRequest);
+        // 1. API 방식 (Authorization 헤더)을 먼저 시도
+        Optional<String> token = extractTokenFromHeader(httpRequest);
+
+        // 2. 헤더에 토큰이 없다면, 기존 MVC 방식 (Cookie) 시도
+        if (token.isEmpty()) {
+            token = extractTokenFromCookie(httpRequest);
+        }
 
         // 만약 토큰이 쿠키에 없다면
         if (token.isEmpty()) {
             // 401 Unauthorized 에러 응답 전송 (로그인되지 않은 사용자)
             log.warn("비공개 경로 [{}] 로 토큰 없이 접속 시도 : 접근 거절", path);
-            httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "쿠키에 토큰 없음");
+            httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "토큰 없음");
             // 필터 로직 종료하고 Controller로 요청 전달 안 함
             return;
         }
@@ -177,6 +185,20 @@ public class JWTTokenFilter extends GenericFilter { // GenricFilter는 모든 �
             }
         }
         // 모든 쿠키를 확인했지만 "AUTH_TOKEN"을 찾지 못했거나 값이 비어있으면 빈 Optional 반환
+        return Optional.empty();
+    }
+
+    private Optional<String> extractTokenFromHeader(HttpServletRequest request) {
+        // "Authorization" 헤더 값을 가져옴
+        String headerValue = request.getHeader(AUTHORIZATION_HEADER);
+
+        // 헤더 값이 존재하고, "Bearer "로 시작하는지 확인
+        if (StringUtils.hasText(headerValue) && headerValue.startsWith(BEARER_PREFIX)) {
+            // "Bearer " 접두사를 제거하고 실제 토큰 값만 반환
+            return Optional.of(headerValue.substring(BEARER_PREFIX.length()));
+        }
+
+        // 헤더가 없거나 형식이 맞지 않으면 빈 Optional 반환
         return Optional.empty();
     }
 }
