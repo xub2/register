@@ -81,7 +81,7 @@ public class Course {
         }
 
         // 3. 조건문 다 통과하면 인원 증가
-        this.currentStudentCapacity++;
+        increaseCapacity();
     }
 
 
