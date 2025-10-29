@@ -47,13 +47,6 @@ public class TestDataInit {
             }
         }
 
-//        em.createNativeQuery("""
-//                INSERT INTO register
-//                (register_id, course_id, student_id, register_date, register_status)
-//                VALUES
-//                    (1, 1, 1, DATE(NOW()), 'COMPLETE')""").executeUpdate();
-
-
     }
 
     private String encryptPassword(String password) {
