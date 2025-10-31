@@ -65,10 +65,6 @@ public class RegisterApiController {
     }
 
 
-    /**
-     * [수정 3] 예외 핸들러 (400 Bad Request)
-     * - 사용자의 요청이 비즈니스 규칙에 맞지 않을 때
-     */
     @ExceptionHandler({
             IllegalArgumentException.class,     // 학점 초과, 잘못된 ID
             CourseCapacityFullException.class,  // 정원 마감
@@ -81,10 +77,6 @@ public class RegisterApiController {
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
-    /**
-     * [수정 3] 예외 핸들러 (409 Conflict)
-     * - DB 상태와 충돌이 날 때 (중복 신청, 이미 취소됨)
-     */
     @ExceptionHandler({
             DataIntegrityViolationException.class, // 이미 신청한 과목 (Unique 제약조건)
             AlreadyCanceledException.class         // 이미 취소된 내역

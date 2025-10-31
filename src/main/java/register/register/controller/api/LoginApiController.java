@@ -20,11 +20,6 @@ import register.register.service.LoginService;
 @RequestMapping("/api")
 public class LoginApiController {
 
-    @ExceptionHandler(LoginAuthenticationException.class)
-    public ResponseEntity<ErrorResponse> handleLoginException(LoginAuthenticationException ex) {
-        return new ResponseEntity<>(new ErrorResponse(ex.getMessage()), HttpStatus.UNAUTHORIZED); // 401 상태 코드
-    }
-
     private final LoginService loginService;
     private final JWTTokenProvider jwtTokenProvider;
 
@@ -39,7 +34,7 @@ public class LoginApiController {
 
         String token = jwtTokenProvider.createToken(student.getStudentNumber(), student.getRole());
 
-        return new ResponseEntity<>(new LoginStudentResponse(token), HttpStatus.OK);
+        return ResponseEntity.ok(new LoginStudentResponse(token));
     }
 
 
@@ -56,4 +51,9 @@ public class LoginApiController {
         private String accessToken;
     }
 
+
+    @ExceptionHandler(LoginAuthenticationException.class)
+    public ResponseEntity<ErrorResponse> handleLoginException(LoginAuthenticationException ex) {
+        return new ResponseEntity<>(new ErrorResponse(ex.getMessage()), HttpStatus.UNAUTHORIZED); // 401 상태 코드
+    }
 }

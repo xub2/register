@@ -37,7 +37,7 @@ public class CourseApiController {
     @GetMapping("/courses")
     public ResponseEntity<List<CourseDto>> getCourses() {
         List<CourseDto> resultCourses = courseService.findAllWithProfessor();
-        return new ResponseEntity<>(resultCourses, HttpStatus.OK);
+        return ResponseEntity.ok(resultCourses);
     }
 
 }
