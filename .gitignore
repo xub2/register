@@ -9,8 +9,8 @@ build/
 !**/src/test/**/build/
 .gitignore
 .gitattributes
-gradlew
-gradlew.bat
+#gradlew
+#gradlew.bat
 spy.log
 settings.gradle
 iam.json
