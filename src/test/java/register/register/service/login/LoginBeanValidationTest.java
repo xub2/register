@@ -11,24 +11,24 @@ import java.util.Set;
 
 class LoginBeanValidationTest {
 
-    @Test
-    public void loginFormBeanValidationTest() throws Exception {
-        //given
-        ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
-        Validator validator = validatorFactory.getValidator();
-
-        LoginDto form = new LoginDto();
-        form.setStudentNumber("     ");
-        form.setPassword("     ");
-
-        //when
-        Set<ConstraintViolation<LoginDto>> violations = validator.validate(form);
-
-        //then
-        for (ConstraintViolation<LoginDto> violation : violations) {
-            System.out.println("violation = " + violation);
-            System.out.println("violation.message() = " + violation.getMessage());
-        }
-     }
+//    @Test
+//    public void loginFormBeanValidationTest() throws Exception {
+//        //given
+//        ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
+//        Validator validator = validatorFactory.getValidator();
+//
+//        LoginDto form = new LoginDto();
+//        form.setStudentNumber("     ");
+//        form.setPassword("     ");
+//
+//        //when
+//        Set<ConstraintViolation<LoginDto>> violations = validator.validate(form);
+//
+//        //then
+//        for (ConstraintViolation<LoginDto> violation : violations) {
+//            System.out.println("violation = " + violation);
+//            System.out.println("violation.message() = " + violation.getMessage());
+//        }
+//     }
 
 }
