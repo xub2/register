@@ -12,7 +12,6 @@ build/
 #gradlew
 #gradlew.bat
 spy.log
-settings.gradle
 iam.json
 docker-compose.yml
 Dockerfile
