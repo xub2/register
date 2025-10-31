@@ -6,7 +6,7 @@ on:
 
 env:
   AWS_REGION: ap-northeast-2
-  ECR_REPOSITORY: register
+  ECR_REPOSITORY: backend-portfolio
 
 jobs:
   deploy:
