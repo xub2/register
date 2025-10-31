@@ -14,7 +14,6 @@ build/
 spy.log
 iam.json
 docker-compose.yml
-Dockerfile
 
 ### STS ###
 .apt_generated
