@@ -9,8 +9,6 @@ build/
 !**/src/test/**/build/
 .gitignore
 .gitattributes
-#gradlew
-#gradlew.bat
 spy.log
 iam.json
 docker-compose.yml
