@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class RegisterApplication {
 
     public static void main(String[] args) {
-        System.out.println("외않되");
+        System.out.println("외않되???????????????");
         SpringApplication.run(RegisterApplication.class, args);
     }
 
