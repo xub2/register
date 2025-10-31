@@ -15,9 +15,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils; // 문자열 유틸리티 (null 또는 빈 문자열 체크)
+import org.springframework.util.StringUtils;
 
-// Java 암호화 API (비밀 키 생성용)
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.IOException;
@@ -30,7 +29,6 @@ import java.util.Optional;
 @Slf4j
 @Component
 public class JWTTokenFilter extends GenericFilter { // GenricFilter는 모든 요청을 가로챈다
-
 
     // JWT 서명/검증에 사용할 비밀 키 (HS512 알고리즘)
     private final SecretKey secretKey;
@@ -72,7 +70,7 @@ public class JWTTokenFilter extends GenericFilter { // GenricFilter는 모든 �
         }
 
         // "/", "/login", "/logout" 등 정확히 일치해야 하는 경로는 공개 처리 (equals: 정확히 같은지)
-        List<String> exactMatchPaths = List.of("/", "/login", "/logout", "/favicon.ico", "/error", "/api/auth/login"); // "/" 중복이지만 괜찮음
+        List<String> exactMatchPaths = List.of("/", "/login", "/logout", "/favicon.ico", "/error", "/api/auth/login", "/actuator/prometheus"); // "/" 중복이지만 괜찮음
         if (!isPublicPath && exactMatchPaths.stream().anyMatch(path::equals)) {
             isPublicPath = true;
         }
@@ -153,11 +151,11 @@ public class JWTTokenFilter extends GenericFilter { // GenricFilter는 모든 �
             // 인증 성공 - 다음 필터(또는 Controller)로 요청 전달
             chain.doFilter(request, response);
 
-        } catch (ExpiredJwtException e) { // 토큰 만료 시
+        } catch (ExpiredJwtException e) {
             log.warn("토큰이 만료되었습니다. 요청 경로: {}", path);
             httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Expired JWT token");
-        } catch (JwtException | IllegalArgumentException e) { // 토큰 서명 불일치, 형식 오류 등
-            log.warn("올바르지 않은 토큰입니다. 요청 경로: {}", path, e); // 로그에 예외 정보 포함
+        } catch (JwtException | IllegalArgumentException e) {
+            log.warn("올바르지 않은 토큰입니다. 요청 경로: {}", path, e);
             httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid JWT token");
         }finally {
             // 토큰 검증용 필터 종료 눈으로 확인하기 위해 찍는 로그
