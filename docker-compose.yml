@@ -1,12 +1,14 @@
+version: '3.8'
+
 services:
   db:
     image: mysql:8.0
     container_name: db
     environment:
-      MYSQL_DATABASE: register
-      MYSQL_USER: xuv
-      MYSQL_PASSWORD: dladytjq1
-      MYSQL_ROOT_PASSWORD: dladytjq1
+      MYSQL_DATABASE: portfolio
+      MYSQL_USER: portfolio_user
+      MYSQL_PASSWORD: portfolio1234
+      MYSQL_ROOT_PASSWORD: portfolio1234
     ports:
       - "3306:3306"
     volumes:
@@ -14,7 +16,7 @@ services:
     networks:
       - monitoring
     healthcheck:
-      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "xuv", "--password=dladytjq1" ]
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "portfolio_user", "--password=portfolio1234" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -31,7 +33,7 @@ services:
     ports:
       - "8080:8080"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/register?allowPublicKeyRetrieval=true&useSSL=false&rewriteBatchedStatements=true
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/portfolio?allowPublicKeyRetrieval=true&useSSL=false&rewriteBatchedStatements=true
       JAVA_OPTS: "-Xms256m -Xmx512m"  # JVM 힙 메모리 제한
     deploy:
       resources:
