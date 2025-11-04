@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class RegisterApplication {
 
     public static void main(String[] args) {
-        System.out.println("가보자~");
+        System.out.println("가보자~ 2트째");
         SpringApplication.run(RegisterApplication.class, args);
     }
 
