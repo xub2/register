@@ -33,7 +33,7 @@
 <img src="https://img.shields.io/badge/MySQL-A2A99F?style=for-the-badge&logo=mySQL&logoColor=white"> 
 <img src="https://img.shields.io/badge/Hibernate-5a999f?style=for-the-badge&logo=Hibernate&logoColor=white">
 <img src="https://img.shields.io/badge/Docker-3578E5?style=for-the-badge&logo=Docker&logoColor=white">
-<img src="https://img.shields.io/badge/Redis-fc2003?style=for-the-badge&logo=Redis&logoColor=white">
+<img src="https://img.shields.io/badge/SpringSecurity-336F19?style=for-the-badge&logo=SpringSecurity&logoColor=white">
 
 ## 📈ERD
 <p align="center">
