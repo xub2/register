@@ -40,13 +40,19 @@
 <p align="center">
 <img width="1654" height="534" alt="Image" src="https://github.com/user-attachments/assets/79a5bbf4-c136-4c69-aaef-73dc4da84bfe" />
 
-## Jwt Login 아키텍처
+## 연관관계 엔티티
+- 처음 JPA를 쓰다보니, 연관관계 다이어그램도 필요하다고 생각했다.
+<img width="60%" height="60%" alt="image" src="https://github.com/user-attachments/assets/4969343a-629f-4f73-8db2-bdfde12b2a37" />
+
+
+## 🔐Jwt Login 아키텍처
 - 자세한 로그인 구현은 아래 참조
 - https://xuv2.notion.site/Login-Auth-2946d43c39778066b686e187dc9288f7?source=copy_link
 <img width="60%" height="60%" alt="image" src="https://github.com/user-attachments/assets/08d0fce8-8cbc-4940-b07f-2be4f57cf2d9" />
 
 
-## View
+## View 및 기능
+
 
 
 
