@@ -91,7 +91,7 @@
 
 ## (배포 주변 반응 이모저모)
 <table>
-  <td><img width="565" height="745" alt="image" src="https://github.com/user-attachments/assets/0551395c-81ad-4474-8ec0-81543600bae7" /></td>
-  <td><img width="632" height="799" alt="image" src="https://github.com/user-attachments/assets/4ae23eec-420c-4be6-9b0e-b8325d30d382" /></td>
-  <td><img width="711" height="779" alt="image" src="https://github.com/user-attachments/assets/5476ed7c-49cc-4e57-ab79-c9a8b691251f" /></td>
+  <td></td>
+  <td></td>
+  <td></td>
 </table>
