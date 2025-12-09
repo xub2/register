@@ -52,7 +52,16 @@
 
 
 ## View 및 기능
-
+<table>
+  <tr>
+    <td><img width="2598" height="1426" alt="image" src="https://github.com/user-attachments/assets/054d42d2-9c16-47ef-bea3-ebe2e0ef54bf" /></td>
+    <td><img width="2502" height="1614" alt="image" src="https://github.com/user-attachments/assets/9eb6bf26-f929-47bf-a935-b641d08ae608" /></td>
+  </tr>
+  <tr>
+    <td><img width="2748" height="1672" alt="image" src="https://github.com/user-attachments/assets/3277864b-002b-4831-9239-c281d434cd38" /></td>
+    <td><img width="2750" height="1216" alt="image" src="https://github.com/user-attachments/assets/04a06d06-ed86-4961-9d91-6912a1e7e729" /></td>
+  </tr>
+</table>
 
 
 
