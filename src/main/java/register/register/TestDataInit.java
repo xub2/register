@@ -28,7 +28,7 @@ public class TestDataInit {
                   (:studentNumber, :studentName, :password, :role, :maxCredit, :currentCredit, :majorId)
                 """;
 
-        for (int i = 1; i <= 30; i++) {
+        for (int i = 1; i <= 100; i++) {
             //noinspection JpaQueryApiInspection
             em.createNativeQuery(sql)
                     .setParameter("studentNumber", String.format("student%03d", i))

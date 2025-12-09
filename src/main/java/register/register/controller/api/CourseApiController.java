@@ -18,7 +18,7 @@ import java.util.List;
 public class CourseApiController {
 
     /**
-     * [수정] 이 컨트롤러에서 발생 가능한 서버 내부 오류를 처리합니다.
+     * [수정] 이 컨트롤러에서 발생 가능한 서버 내부 오류를 처리
      * (예: DB 연결 실패, NullPointerException 등)
      */
     @ExceptionHandler(Exception.class) // 6. SignatureException -> Exception.class

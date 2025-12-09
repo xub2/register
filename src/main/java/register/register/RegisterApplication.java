@@ -7,6 +7,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class RegisterApplication {
 
     // 시작전 github repo secret 에 EC2 엔드포인트 수정
+// 꺼진 스프링 애플리케이션 로그 보기
+// docker logs --tail 200 portfolio-app
 
     public static void main(String[] args) {
         System.out.println("가보자~ N+N+N+N+N트째");

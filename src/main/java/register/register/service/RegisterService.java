@@ -26,8 +26,13 @@ public class RegisterService {
 
     @Transactional
     public Register createRegister(Student student, Long courseId) {
-        Course course = courseRepository.findById(courseId)
+        Course course = courseRepository.findByIdWithPessimisticLock(courseId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 과목 ID 입니다."));
+
+        if (course.getCurrentStudentCapacity() >= course.getMaxStudentCapacity()) {
+            throw new IllegalStateException("수강 인원이 마감되었습니다.");
+        }
+
         Register register = Register.createRegister(student, course);
 
         course.increaseCapacity();
@@ -42,8 +47,10 @@ public class RegisterService {
         Register register = registerRepository.findWithStudentAndCourseById(registerId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 수강 신청 내역입니다. ID: " + registerId));
 
+        Course course = courseRepository.findByIdWithPessimisticLock(register.getCourse().getId())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 과목 ID 입니다."));
+
         Student student = register.getStudent();
-        Course course = register.getCourse();
 
         register.cancelRegister(); // (Register 엔티티의 메서드 시그니처 수정 권장 - 4번 항목 참고)
         student.removeCredits(course.getCourseCredit());

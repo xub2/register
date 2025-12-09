@@ -24,7 +24,7 @@ public interface RegisterRepository extends JpaRepository<Register, Long> {
             "where r.student.id = :id")
     List<RegisterApiDto> getRegisterApiDtoByStudentId(@Param("id") Long studentId);
 
-    @Query("SELECT r FROM Register r JOIN FETCH r.student s JOIN FETCH r.course c WHERE r.id = :registerId")
+    @Query("select r from Register r join fetch r.student s join fetch r.course c where r.id = :registerId")
     Optional<Register> findWithStudentAndCourseById(@Param("registerId") Long registerId);
 }
 
