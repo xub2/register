@@ -34,10 +34,19 @@
 <img src="https://img.shields.io/badge/Hibernate-5a999f?style=for-the-badge&logo=Hibernate&logoColor=white">
 <img src="https://img.shields.io/badge/Docker-3578E5?style=for-the-badge&logo=Docker&logoColor=white">
 <img src="https://img.shields.io/badge/SpringSecurity-336F19?style=for-the-badge&logo=SpringSecurity&logoColor=white">
+<img src="https://img.shields.io/badge/JwtToken-5a999f?style=for-the-badge&logo=JwtToken&logoColor=white">
 
 ## 📈ERD
 <p align="center">
 <img width="1654" height="534" alt="Image" src="https://github.com/user-attachments/assets/79a5bbf4-c136-4c69-aaef-73dc4da84bfe" />
+
+## Jwt Login 아키텍처
+<img width="60%" height="60%" alt="image" src="https://github.com/user-attachments/assets/08d0fce8-8cbc-4940-b07f-2be4f57cf2d9" />
+
+
+## View
+
+
 
 ## 🔧개선 사항
 
