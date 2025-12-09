@@ -37,7 +37,7 @@
 
 ## 📈ERD
 <p align="center">
-<img width="3200" height="1654" alt="Image" src="https://github.com/user-attachments/assets/667259c2-19c6-49c7-8e78-96b0e4103ab8" />
+<img width="1654" height="534" alt="Image" src="https://github.com/user-attachments/assets/79a5bbf4-c136-4c69-aaef-73dc4da84bfe" />
 
 ## 🔧개선 사항
 
