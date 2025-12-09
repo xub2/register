@@ -41,7 +41,7 @@
 <img width="1654" height="534" alt="Image" src="https://github.com/user-attachments/assets/79a5bbf4-c136-4c69-aaef-73dc4da84bfe" />
 
 ## 연관관계 엔티티
-- 처음 JPA를 쓰다보니, 연관관계 다이어그램도 필요하다고 생각했다.
+- 처음 JPA를 쓰다보니, 연관관계 다이어그램도 필요하다고 생각했습니다.
 <img width="60%" height="60%" alt="image" src="https://github.com/user-attachments/assets/4969343a-629f-4f73-8db2-bdfde12b2a37" />
 
 
@@ -62,15 +62,18 @@
     <td><img width="2750" height="1216" alt="image" src="https://github.com/user-attachments/assets/04a06d06-ed86-4961-9d91-6912a1e7e729" /></td>
   </tr>
 </table>
+<img width="979" height="232" alt="image" src="https://github.com/user-attachments/assets/ebe95b76-9c7f-471b-b0d5-793837dfb018" />
+
 
 
 
 ## 🔧개선 사항
 
-### 1) 인덱스 없이 Full Text Scan 문제 발생
-- 증상 : 티켓 및 예약 조회 API의 평균 응답 속도가 70ms 이상 소요되며, 동시 접속 시 DB CPU 부하 발생하였습니다.
-- 원인 : where 조건절과 order by 절에 포함된 컬럼들에 적절한 인덱스의 부재 -> Full Text Scan 및 FileSort 가 발생하였습니다.
-- 결과 : 카디널리티를 고려하여 최적의 복합인덱스(커버링 인덱스)를 설계하고 적용하여 평균 조회 응답시간 약 71% 단축 + Full Text Scan 및 FileSort 를 제거하였습니다.
+### 1) 예비 수강신청후 일괄 신청시 DeadLock 문제 발생
+- 원인 : 예비 수강신청 일관 신청시 다수의 트랜잭션이 충돌하며 DeadLock 문제가 발생했습니다.
+- 증상 : 예를 들어 사용자1(트랜잭션1)이 (A과목, B과목)을 신청하고, 사용자2(트랜잭션2)가 (B과목, A과목)을 신청하는 과정에서, 각각 1순위 과목을 신청하고 2순위 과목을 신청하면서 서로의 베타락을 기다리는 문제가 발생했습니다(DeadLock).
+- 결과 : 사용자마다 예비 수강 장바구니에 담는 순서가 달라 문제가 발생하였으므로, 비즈니스 로직 진입 시점에 장바구니의 모든 강의들을 courses의 PK순으로 정렬하여 순차적으로 락을 획득하도록 강제하였습니다.
+- 이로써 순환 대기가 물리적으로 차단되어 71% 의 트랜잭션 롤백률이 0% 로 감소하였고, 사용자에겐 오류 화면 대신 대기를 제공함으로써 사용자 경험을 개선할 수 있게 되었습니다.
 
 ### 2) 인덱스 오버헤드로 인한 응답 지연 분석 및 최적화 (쿼리 플랜의 Rows 가 줄어든다고 무조건 성능 좋은게 아님)
 - 증상 : 특정 이벤트의 티켓 목록을 조회할 때, 쿼리 최적화를 위해 복합 인덱스(event_id, status)를 추가하였으나 Query Explain 상 조회되는 Row 수는
