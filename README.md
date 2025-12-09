@@ -1,6 +1,6 @@
 # 수강신청 Demo Application
 <p align="center">
-<img src="" alt="로고" width="30%" height="30%">
+<img src="https://github.com/user-attachments/assets/2e946bb3-c49d-4bd0-af5c-12d3405e62ef" alt="로고" width="50%" height="50%">
 </p>
 
 # 개발 기간
@@ -36,16 +36,16 @@
 <img src="https://img.shields.io/badge/SpringSecurity-336F19?style=for-the-badge&logo=SpringSecurity&logoColor=white">
 <img src="https://img.shields.io/badge/JwtToken-5a999f?style=for-the-badge&logo=JwtToken&logoColor=white">
 
-## 📈ERD
+## 📈 ERD
 <p align="center">
 <img width="1654" height="534" alt="Image" src="https://github.com/user-attachments/assets/79a5bbf4-c136-4c69-aaef-73dc4da84bfe" />
 
 ## 연관관계 엔티티
-- 처음 JPA를 쓰다보니, 연관관계 다이어그램도 필요하다고 생각했습니다.
+- 처음 JPA를 쓰다보니, 개발 생산성을 위해 연관관계 다이어그램도 필요하다고 생각했습니다.
 <img width="60%" height="60%" alt="image" src="https://github.com/user-attachments/assets/4969343a-629f-4f73-8db2-bdfde12b2a37" />
 
 
-## 🔐Jwt Login 아키텍처
+## 🔐 Jwt Login 아키텍처
 - 자세한 로그인 구현은 아래 참조
 - https://xuv2.notion.site/Login-Auth-2946d43c39778066b686e187dc9288f7?source=copy_link
 <img width="60%" height="60%" alt="image" src="https://github.com/user-attachments/assets/08d0fce8-8cbc-4940-b07f-2be4f57cf2d9" />
@@ -66,27 +66,32 @@
 
 
 
+## 🔧 문제 및 개선 사항
 
-## 🔧개선 사항
-
-### 1) 예비 수강신청후 일괄 신청시 DeadLock 문제 발생
+### 1) 예비 수강신청 후 일괄 신청시 DeadLock 문제 발생
 - 원인 : 예비 수강신청 일관 신청시 다수의 트랜잭션이 충돌하며 DeadLock 문제가 발생했습니다.
 - 증상 : 예를 들어 사용자1(트랜잭션1)이 (A과목, B과목)을 신청하고, 사용자2(트랜잭션2)가 (B과목, A과목)을 신청하는 과정에서, 각각 1순위 과목을 신청하고 2순위 과목을 신청하면서 서로의 베타락을 기다리는 문제가 발생했습니다(DeadLock).
-- 결과 : 사용자마다 예비 수강 장바구니에 담는 순서가 달라 문제가 발생하였으므로, 비즈니스 로직 진입 시점에 장바구니의 모든 강의들을 courses의 PK순으로 정렬하여 순차적으로 락을 획득하도록 강제하였습니다.
+- 결과 : 사용자마다 예비 수강 장바구니에 담는 순서가 달라 문제가 발생하였으므로, 비즈니스 로직 진입 시점에 장바구니의 모든 강의들을 courses의 PK 오름차순으로 정렬하여 순차적으로 락을 획득하도록 강제하였습니다.
 - 이로써 순환 대기가 물리적으로 차단되어 71% 의 트랜잭션 롤백률이 0% 로 감소하였고, 사용자에겐 오류 화면 대신 대기를 제공함으로써 사용자 경험을 개선할 수 있게 되었습니다.
 
-### 2) 인덱스 오버헤드로 인한 응답 지연 분석 및 최적화 (쿼리 플랜의 Rows 가 줄어든다고 무조건 성능 좋은게 아님)
-- 증상 : 특정 이벤트의 티켓 목록을 조회할 때, 쿼리 최적화를 위해 복합 인덱스(event_id, status)를 추가하였으나 Query Explain 상 조회되는 Row 수는
-9개 → 5개로 줄어들었으나, 실제 API 응답 시간은 오히려 미세하게 증가하는 현상이 발생하였습니다.
-- 원인 : 기존 테스트 데이터 표본의 개수가 이미 FK 인덱스를 통해 충분한 속도를 확보 하고 있었습니다. 그러나 복합 인덱스 추가로 b-tree의 구조가 깊어졌고, 결과적으로 복잡한 인덱스 구조를 탐색 하는 비용이 적은 데이터를 메모리에서 필터링하는 비용보다 높게 측정 되었습니다.
-- 결과 : 해당 엔티티를 조회하는 쿼리는 소량의 데이터를 빈번하게 조회하는 패턴임을 파악하였고, 무리한 인덱스 적용을 철회하여 기존의 FK 인덱스 전략을 유지하는것으로 리팩토링하여 쓰기 성능 저하를 방지하였습니다.
+### 2) Stateless 아키텍처 도입을 통한 서버 확장성 확보(Session -> JWT)
+- 배경 : 개발 초기에는 SSR 방식에서 보편적이고 보안성이 높은 Session - Cookie 방식을 채택하였지만, 수강신청 시작 시점에 수천명의 트래픽이 몰리는 상황을 가정하였습니다.
+- 증상 : 결국 Session 방식은 별도의 로그인 DB를 관리해야하기 때문에, 세션 DB에서 I/O 부하가 발생하였습니다.
+- 단순 Scale-up + DB 커넥션을 늘리기를 통해 해결할 수 있고, 금전적인 한계가 있다면 Scale-out 방식을 채택하여 데이터베이스 샤딩, 세션 클러스터링 관리등을 통하여 확장을 고려할 수 있지만, 인프라 관리 복잡도가 많이 높아질 것으로 예상되었습니다.
+- 해결 : 서버가 상태를 저장하지 않는 stateless 한 JWT 방식을 채택하여 세션 DB가 부담하던 비용을 제거하고, 별도의 저장소 없이도 인가 처리가 가능하도록 구현하여 DB 비용을 절감할 수 있게 되었습니다.
+- 앞으로 개선할 점:
+- Access Token의 탈취 위험을 줄이기 위한 대표적인 방식으로 Refresh Token 방식이 존재하는데, 만약 이 Refresh Token 자체가 탈취 당하게 되면, 해커가 지속적으로 Access Token을 재발급 받을 수 있는 보안 위협 존재 -> 어떻게 해결할 수 있는지 생각해보기.
 
-### 3) 트랜잭션 범위 최적화 및 TPS 개선
-- 증상 1 : 외부 API가 서비스에 엮여 돌아갈 때, 장애 발생 시 예약 데이터까지 롤백되어 데이터 정합성 문제가 발생하였습니다
-- 증상 2 : 트랜잭션이 길어지는 만큼 DB 커넥션 점유 시간이 길어져 기대치 보다 낮은 TPS가 측정 되었습니다. (349 TPS)
+### 3) 수동 배포의 비효율성 개선 및 무중단 배포 파이프라인 구축 (배포만 한다고 끝이 아니다)
+- 증상 : 로컬 빌드 후  Jar 파일을 업로드(도커 이미징)하고 서버를 재시작하는 수동 배포 환경이 반복되었습니다. 인프라를 A-Z 까지 설정하기엔 실수 가능성이 높고 많은 시간이 소요 될 가능성이 높았습니다.
+- 해결 : IaC의 대표적인 방식인 Terraform을 이용하여 AWS 인프라를 코드로 정의하여 배포 환경을 자동화 하였습니다.
+- Github Actions를 통해 IDE에서 레포지토리에 Push 하게 되면 아래와 같은 작업이 자동으로 수행 되도록 파이프라인을 구현하였습니다.
+- [변경 사항 Push → CI(빌드 시작) → ECR에 이미지 빌드 및 컨테이너화 → CD(SSH 접속 없이 SSM을 통해 EC2 인스턴스 명령전송)→ EC2 의 기존 애플리케이션 종료 및 삭제 → Secret을 애플리케이션에 주입후 컨테이너 실행]
+- 결과 : 이를 통해 배포 소요시간이 크게 감축된 것에 이어, 실행 환경과 개발 환경의 운영 환경 일치를 보장할 수 있게 되었습니다.
 
-- 원인 1 : DB 트랜잭션 내부에 외부 API 호출이 포함되어 있어, DB 커넥션 점유 시간이 불필요하게 길어졌습니다. (네트워크를 타는 작업은 항상 오류 가능성 높음)
-- 원인 2 : 강한 결합으로 인해 부가 기능의 실패가 메인 로직에 영향을 주고 있었습니다.
-
-- 결과 : DB 작업은 트랜잭션 내부에서, 외부 API는 트랜잭션 외부에서 호출하도록 범위를 조정하여 부가 기능이 메인 로직에 영향을 주지 않도록 방지 하였고, Spring의 EventPublisher을 통해 부가 로직 (User Notification 등)은 비동기적으로 분리하였습니다
-- 트랜잭션의 평균 수행 시간이 2.86ms -> 1.78ms 로 개선되었고 TPS가 349.6 -> 516.8 로 약 61% 향상 되었습니다.  
+## (배포 주변 반응 이모저모)
+<table>
+  <td><img width="565" height="745" alt="image" src="https://github.com/user-attachments/assets/0551395c-81ad-4474-8ec0-81543600bae7" /></td>
+  <td><img width="632" height="799" alt="image" src="https://github.com/user-attachments/assets/4ae23eec-420c-4be6-9b0e-b8325d30d382" /></td>
+  <td><img width="711" height="779" alt="image" src="https://github.com/user-attachments/assets/5476ed7c-49cc-4e57-ab79-c9a8b691251f" /></td>
+</table>
