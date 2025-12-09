@@ -45,7 +45,7 @@
 <img width="60%" height="60%" alt="image" src="https://github.com/user-attachments/assets/4969343a-629f-4f73-8db2-bdfde12b2a37" />
 
 
-## 🔐 Jwt Login 아키텍처
+## 🔐 JWT 로그인 아키텍처
 - 자세한 로그인 구현은 아래 참조
 - https://xuv2.notion.site/Login-Auth-2946d43c39778066b686e187dc9288f7?source=copy_link
 <img width="60%" height="60%" alt="image" src="https://github.com/user-attachments/assets/08d0fce8-8cbc-4940-b07f-2be4f57cf2d9" />
@@ -91,7 +91,7 @@
 
 ## (배포 주변 반응 이모저모)
 <table>
-  <td></td>
-  <td></td>
-  <td></td>
+  <td><img width="603" height="666" alt="image" src="https://github.com/user-attachments/assets/33a51ea1-62a4-4108-9012-cb5e71b4a5b3" /></td>
+  <td><img width="510" height="669" alt="image" src="https://github.com/user-attachments/assets/b04b24a4-ca9c-4a5d-a1fe-3d48d6eb1ad5" /></td>
+  <td><img width="531" height="666" alt="image" src="https://github.com/user-attachments/assets/a3475018-cb56-4e3e-a25e-cb008ea0abdb" /></td>
 </table>
